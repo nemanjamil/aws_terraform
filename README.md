@@ -1,2 +1,2 @@
-# aws_terraform
+# Aws and Terraform
 Learning Scripts for AWS and Terraform

@@ -14,6 +14,6 @@ Learning Scripts for AWS and Terraform
 ### Commands: ###
 * https://acloudguru.com/blog/engineering/the-ultimate-terraform-cheatsheet
 * terraform validate
-* terraform apply -auto-approve
+* terraform apply --auto-approve
 * terraform destroy --auto-approve
 

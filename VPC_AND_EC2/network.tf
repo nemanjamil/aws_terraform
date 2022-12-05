@@ -14,6 +14,14 @@ resource "aws_vpc" "runner" {
     Name = "${local.main_name}-VPC"
   }
 }
+
+resource "aws_default_security_group" "default" {
+  vpc_id = aws_vpc.runner.id
+  tags = {
+    Name = "${local.main_name}-SecGroup"
+  }
+}
+
 # Subnets
 resource "aws_subnet" "public-us-east-1a" {
   vpc_id            = aws_vpc.runner.id

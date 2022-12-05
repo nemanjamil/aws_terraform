@@ -12,13 +12,6 @@
 #   }
 # }
 
-module "ami" {
-  source       = "devops-workflow/ami-ids/aws"
-  distribution = "ubuntu"
-  version      = "0.0.2"
-}
-
-
 data "aws_ami" "latest-ec2" {
   most_recent = true
   owners      = ["amazon"]
@@ -29,8 +22,7 @@ data "aws_ami" "latest-ec2" {
 }
 
 resource "aws_instance" "web_instance" {
-  ami = data.aws_ami.latest-ec2.id
-  //ami           = module.ami.ami_id
+  ami           = data.aws_ami.latest-ec2.id
   instance_type = "t3a.nano"
   key_name      = "EC2 Tutorial"
 

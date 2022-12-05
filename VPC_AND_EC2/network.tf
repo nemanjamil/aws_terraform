@@ -1,10 +1,17 @@
 #contains vpc, subnets, internet gateway, nat, routing table
 
+locals {
+  instance_name = "${terraform.workspace}-instance"
+  main_name     = "Test2"
+  timestamp     = formatdate("YYYYMMDDhhmmss", timestamp())
+  prefix        = "route-${local.timestamp}"
+}
+
 # VPC
 resource "aws_vpc" "runner" {
   cidr_block = "10.0.0.0/16"
   tags = {
-    Name = "VPC_Test_2"
+    Name = "${local.main_name}-VPC"
   }
 }
 # Subnets
@@ -14,7 +21,7 @@ resource "aws_subnet" "public-us-east-1a" {
   availability_zone = var.az-1a
 
   tags = {
-    Name = "public-us-east-1a"
+    Name = "${local.main_name}-public-us-east-1a"
   }
 }
 
@@ -25,7 +32,7 @@ resource "aws_subnet" "public-us-east-1b" {
   availability_zone = var.az-1b
 
   tags = {
-    Name = "public-us-east-1b"
+    Name = "${local.main_name}-public-us-east-1b"
   }
 }
 
@@ -35,7 +42,7 @@ resource "aws_subnet" "public-us-east-1c" {
   availability_zone = var.az-1c
 
   tags = {
-    Name = "public-us-east-1c"
+    Name = "${local.main_name}-public-us-east-1c"
   }
 }
 
@@ -44,6 +51,6 @@ resource "aws_subnet" "public-us-east-1c" {
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.runner.id
   tags = {
-    Name = var.main_name
+    Name = "${local.main_name}-igw"
   }
 }

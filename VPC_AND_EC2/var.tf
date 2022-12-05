@@ -4,6 +4,7 @@ variable "aws_region" {
 }
 
 variable "az-1a" {
+  type    = string
   default = "us-east-1a"
 }
 variable "az-1b" {
@@ -16,3 +17,5 @@ variable "az-1c" {
 variable "main_name" {
   default = "test2"
 }
+
+

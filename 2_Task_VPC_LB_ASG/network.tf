@@ -53,6 +53,26 @@ resource "aws_subnet" "public-us-east-1c" {
   }
 }
 
+# Private Subnet
+resource "aws_subnet" "private-us-east-1a" {
+  vpc_id            = aws_vpc.runner.id
+  cidr_block        = "10.0.4.0/24"
+  availability_zone = var.az-1a
+
+  tags = {
+    Name = "${local.main_name}-private-us-east-1a"
+  }
+}
+resource "aws_subnet" "private-us-east-1b" {
+  vpc_id            = aws_vpc.runner.id
+  cidr_block        = "10.0.5.0/24"
+  availability_zone = var.az-1b
+
+  tags = {
+    Name = "${local.main_name}-private-us-east-1b"
+  }
+}
+
 
 # AWS internet gateway
 resource "aws_internet_gateway" "igw" {

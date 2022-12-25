@@ -15,6 +15,20 @@ resource "aws_lb" "app-load-balancer" {
 
 }
 
+resource "aws_lb_listener" "application-lb" {
+  load_balancer_arn = aws_lb.app-load-balancer.arn
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.loadb-target-group.arn
+  }
+}
+
+
+#Target Groups
+
 resource "aws_lb_target_group" "loadb-target-group" {
   name     = "${local.main_name}-loadb-target-group"
   port     = 80
@@ -26,19 +40,21 @@ resource "aws_lb_target_group" "loadb-target-group" {
   }
 }
 
-resource "aws_lb_target_group_attachment" "lb-tg-attach" {
+resource "aws_lb_target_group_attachment" "lb-tg-attach-1" {
   target_group_arn = aws_lb_target_group.loadb-target-group.arn
-  target_id        = aws_instance.web_instance.id
+  target_id        = aws_instance.web_instance_1.id
   port             = 80
 }
 
-resource "aws_lb_listener" "application-lb" {
-  load_balancer_arn = aws_lb.app-load-balancer.arn
-  port              = "80"
-  protocol          = "HTTP"
-
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.loadb-target-group.arn
-  }
+resource "aws_lb_target_group_attachment" "lb-tg-attach-2" {
+  target_group_arn = aws_lb_target_group.loadb-target-group.arn
+  target_id        = aws_instance.web_instance_2.id
+  port             = 80
 }
+
+resource "aws_lb_target_group_attachment" "lb-tg-attach-3" {
+  target_group_arn = aws_lb_target_group.loadb-target-group.arn
+  target_id        = aws_instance.web_instance_3.id
+  port             = 80
+}
+

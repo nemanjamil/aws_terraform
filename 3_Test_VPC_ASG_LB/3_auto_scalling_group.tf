@@ -1,9 +1,9 @@
 resource "aws_launch_template" "app" {
-  name_prefix   = "${var.meta.project_slug}-${var.meta.environment}"
-  image_id      = var.app_config.template.ami_id
-  instance_type = var.app_config.template.instance_type
-  key_name      = var.app_config.template.key_name
-  user_data     = filebase64(var.app_config.template.user_data_file)
+  name_prefix   = var.name.name_prefix_aws_launch_template
+  image_id      = var.template.ami_id
+  instance_type = var.template.instance_type
+  key_name      = var.template.key_name
+  user_data     = filebase64(var.template.user_data_file)
 
   ebs_optimized = true
   monitoring {
@@ -23,9 +23,9 @@ resource "aws_autoscaling_group" "dynamic" {
     aws_subnet.public-us-east-1b.id,
     aws_subnet.public-us-east-1c.id
   ]
-  min_size         = var.app_config.autoscaling.minimum
-  max_size         = var.app_config.autoscaling.maximum
-  desired_capacity = var.app_config.autoscaling.desired
+  min_size         = 1
+  max_size         = 2
+  desired_capacity = 1
 
   health_check_grace_period = 180
   health_check_type         = "ELB"
@@ -71,7 +71,7 @@ resource "aws_autoscaling_group" "dynamic" {
 }
 
 resource "aws_autoscaling_policy" "app_scale_up" {
-  name                   = "${var.meta.project_slug}-${var.meta.environment}-app-up"
+  name                   = var.name.name_prefix_aws_autoscaling_policy_up
   scaling_adjustment     = 1
   adjustment_type        = "ChangeInCapacity"
   cooldown               = 300
@@ -79,7 +79,7 @@ resource "aws_autoscaling_policy" "app_scale_up" {
 }
 
 resource "aws_autoscaling_policy" "app_scale_down" {
-  name                   = "${var.meta.project_slug}-${var.meta.environment}-app-down"
+  name                   = var.name.name_prefix_aws_autoscaling_policy_down
   scaling_adjustment     = -1
   adjustment_type        = "ChangeInCapacity"
   cooldown               = 300
@@ -87,7 +87,7 @@ resource "aws_autoscaling_policy" "app_scale_down" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "app_cpu_up" {
-  alarm_name          = "${var.meta.project_slug}-${var.meta.environment}-cpu-up"
+  alarm_name          = var.name.name_aws_cloudwatch_metric_alarm_up
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "2"
   metric_name         = "CPUUtilization"
@@ -105,7 +105,7 @@ resource "aws_cloudwatch_metric_alarm" "app_cpu_up" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "app_cpu_down" {
-  alarm_name          = "${var.meta.project_slug}-${var.meta.environment}-cpu-down"
+  alarm_name          = var.name.name_aws_cloudwatch_metric_alarm_down
   comparison_operator = "LessThanOrEqualToThreshold"
   evaluation_periods  = "2"
   metric_name         = "CPUUtilization"
@@ -121,3 +121,4 @@ resource "aws_cloudwatch_metric_alarm" "app_cpu_down" {
   alarm_description = "This metric monitor EC2 instance CPU utilization"
   alarm_actions     = [aws_autoscaling_policy.app_scale_down.arn]
 }
+

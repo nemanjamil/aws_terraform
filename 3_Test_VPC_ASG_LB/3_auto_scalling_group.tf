@@ -78,6 +78,7 @@ resource "aws_autoscaling_group" "dynamic" {
   lifecycle {
     // https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_attachment
     // u dokumentaciji pise da treba da se doda lifecycle 
+    // da li uopste mi ovo treba
     ignore_changes = [load_balancers, target_group_arns]
   }
 }

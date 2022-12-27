@@ -17,3 +17,11 @@ variable "az-1c" {
 variable "main_name" {
   default = "test2"
 }
+
+variable "app_config"  {
+    default = "autoscaling" {
+          minimum = 1
+         desired = 1
+          maximum = 2
+    }
+  }

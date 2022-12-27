@@ -40,21 +40,9 @@ resource "aws_lb_target_group" "loadb-target-group" {
   }
 }
 
-resource "aws_lb_target_group_attachment" "lb-tg-attach-1" {
-  target_group_arn = aws_lb_target_group.loadb-target-group.arn
-  target_id        = aws_autoscaling_group.dynamic.id
-  port             = 80
-}
-
-# resource "aws_lb_target_group_attachment" "lb-tg-attach-2" {
+# resource "aws_lb_target_group_attachment" "lb-tg-attach-1" {
 #   target_group_arn = aws_lb_target_group.loadb-target-group.arn
-#   target_id        = aws_instance.web_instance_2.id
-#   port             = 80
-# }
-
-# resource "aws_lb_target_group_attachment" "lb-tg-attach-3" {
-#   target_group_arn = aws_lb_target_group.loadb-target-group.arn
-#   target_id        = aws_instance.web_instance_3.id
+#   target_id        = aws_autoscaling_group.dynamic.id
 #   port             = 80
 # }
 

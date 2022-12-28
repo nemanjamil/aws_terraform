@@ -23,6 +23,7 @@ resource "aws_launch_template" "app" {
 # }
 
 resource "aws_autoscaling_group" "dynamic" {
+
   vpc_zone_identifier = [
     aws_subnet.public-us-east-1a.id,
     aws_subnet.public-us-east-1b.id,
@@ -32,7 +33,7 @@ resource "aws_autoscaling_group" "dynamic" {
   max_size         = 2
   desired_capacity = 1
 
-  # target_group_arns = [
+   #target_group_arns = [
   #   // ako stavimo ovo da li nam treba aws_autoscaling_attachment
   #   aws_lb_target_group.loadb-target-group.arn
   # ]
@@ -86,7 +87,7 @@ resource "aws_autoscaling_group" "dynamic" {
 // kontam da ovde treba da povezem ASG sa LB
 resource "aws_autoscaling_attachment" "asg_attachment_bar" {
   autoscaling_group_name = aws_autoscaling_group.dynamic.id
-  elb                    = aws_lb.app-load-balancer.id
+  #elb                    = aws_alb.app-load-balancer.id
 }
 
 resource "aws_autoscaling_policy" "app_scale_up" {

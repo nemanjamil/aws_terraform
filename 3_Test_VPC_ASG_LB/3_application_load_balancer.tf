@@ -1,5 +1,5 @@
-resource "aws_lb" "app-load-balancer" {
-  name               = "${local.main_name}-alb"
+resource "aws_alb" "app-load-balancer" {
+  name               = "Test-application-alb"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb.id]
@@ -10,13 +10,13 @@ resource "aws_lb" "app-load-balancer" {
   ]
 
   tags = {
-    Name = "${local.main_name}-alb"
+    Name = "Test-application-alb"
   }
 
 }
 
 resource "aws_lb_listener" "application-lb" {
-  load_balancer_arn = aws_lb.app-load-balancer.arn
+  load_balancer_arn = aws_alb.app-load-balancer.arn
   port              = "80"
   protocol          = "HTTP"
 

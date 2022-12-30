@@ -2,15 +2,14 @@ resource "aws_launch_template" "app" {
   name_prefix   = var.name.name_prefix_aws_launch_template
   image_id      = var.template.ami_id
   instance_type = var.template.instance_type
-  //key_name      = var.template.key_name
+  #key_name      = var.template.key_name
   user_data = filebase64(var.template.user_data_file)
-
   ebs_optimized = true
   monitoring {
     enabled = true
   }
 
-  vpc_security_group_ids = [aws_security_group.alb.id]
+  vpc_security_group_ids = [aws_security_group.ec2.id]
 
   lifecycle {
     create_before_destroy = true
@@ -29,15 +28,16 @@ resource "aws_autoscaling_group" "dynamic" {
     aws_subnet.public-us-east-1b.id,
     aws_subnet.public-us-east-1c.id
   ]
+
   min_size         = 1
   max_size         = 2
   desired_capacity = 1
-
+  target_group_arns = [aws_lb_target_group.app-load-balancer.arn, aws_lb_target_group.loadb-target-group.arn]
    #target_group_arns = [
   #   // ako stavimo ovo da li nam treba aws_autoscaling_attachment
   #   aws_lb_target_group.loadb-target-group.arn
   # ]
-
+  launch_configuration = aws_launch_configuration.test.name
   health_check_grace_period = 180
   health_check_type         = "ELB" // ili EC2 ???
   default_cooldown          = 300
@@ -64,10 +64,10 @@ resource "aws_autoscaling_group" "dynamic" {
     "WarmPoolTotalCapacity",
     "WarmPoolWarmedCapacity",
   ]
-  launch_template {
-    id      = aws_launch_template.app.id
-    version = aws_launch_template.app.latest_version
-  }
+ # launch_template {
+  #  id      = aws_launch_template.app.id
+ #   version = aws_launch_template.app.latest_version
+ # }
 
   # Automatically refresh all instances after the group is updated
   instance_refresh {
@@ -84,6 +84,16 @@ resource "aws_autoscaling_group" "dynamic" {
   }
 }
 
+resource "aws_launch_configuration" "test" {
+  name            = "Launch-config-test"
+  image_id        = var.template.ami_id
+  instance_type   = var.template.instance_type
+  security_groups = [aws_security_group.ec2.id]
+  # key name zakomentarisan, ukoliko hoces da koristis neki, kreiraj ga i dodaj u var
+  #key_name        = var.template.key_name
+
+  user_data = "${file("3_user_data.sh")}"
+}
 // kontam da ovde treba da povezem ASG sa LB
 resource "aws_autoscaling_attachment" "asg_attachment_bar" {
   autoscaling_group_name = aws_autoscaling_group.dynamic.id

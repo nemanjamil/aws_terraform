@@ -27,7 +27,8 @@ variable "template" {
   default = {
     "ami_id"         = "ami-0b5eea76982371e91"
     "instance_type"  = "t3a.nano"
-    "key_name"       = "EC2 Tutorial"
+    # key name je zakomentarisan jer sam ja koristio svoj key da bih proverio ssh
+   # "key_name"       = "test"
     "user_data_file" = "./3_user_data.sh"
   }
 }
@@ -41,6 +42,9 @@ variable "name" {
     "name_aws_cloudwatch_metric_alarm_up"     = "cloudwatch-cpu-up"
     "name_aws_cloudwatch_metric_alarm_down"   = "cloudwatch-cpu-down"
   }
+}
+variable "public_key_path" {
+  default = "./"
 }
 #variable "ami_id" {
 #  default = "ami-0b5eea76982371e91"

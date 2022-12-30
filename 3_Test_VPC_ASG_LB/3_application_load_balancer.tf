@@ -3,28 +3,36 @@ resource "aws_alb" "app-load-balancer" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb.id]
-  subnets = [
+  subnets            = [
     aws_subnet.public-us-east-1a.id,
     aws_subnet.public-us-east-1b.id,
     aws_subnet.public-us-east-1c.id
   ]
-
   tags = {
     Name = "Test-application-alb"
   }
 
 }
 
-resource "aws_lb_listener" "application-lb" {
+resource "aws_lb_listener" "listener" {
   load_balancer_arn = aws_alb.app-load-balancer.arn
-  port              = "80"
-  protocol          = "HTTP"
-
+  port = 80
+  protocol = "HTTP"
   default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.loadb-target-group.arn
+    type = "forward"
+    target_group_arn = aws_lb_target_group.app-load-balancer.arn
   }
 }
+resource "aws_lb_target_group" "app-load-balancer" {
+  name = "test-target-group"
+  port = 80
+  protocol = "HTTP"
+  vpc_id = aws_vpc.runner.id
+}
+
+
+
+
 
 
 #Target Groups
